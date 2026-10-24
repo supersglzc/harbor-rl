@@ -1,0 +1,13 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "harbor",
+  "version": "0.2.0",
+  "description": "Build and test robot RL tasks, train policies, and tune rewards and algorithms with HARBOR.",
+  "author": {
+    "name": "Steven Li",
+    "url": "https://github.com/supersglzc"
+  },
+  "homepage": "https://supersglzc.github.io/harbor-rl",
+  "repository": "https://github.com/supersglzc/harbor-rl",
+  "license": "Apache-2.0"
+}
