@@ -1,0 +1,20 @@
+{
+  "name": "harbor-codex",
+  "interface": {
+    "displayName": "HARBOR for Codex"
+  },
+  "plugins": [
+    {
+      "name": "harbor",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
