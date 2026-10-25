@@ -9,6 +9,10 @@ Run HARBOR workflows in the **target simulator repository**, using the existing
 HARBOR scripts, templates, and executable checks. The HARBOR plugin repository
 contains the tools; the simulator repository contains the generated project.
 
+For a single named command, prefer its matching `$harbor-<command>` skill
+(for example, `$harbor-task-create` or `$harbor-rl-eval`). This general skill
+remains available for selecting a workflow or coordinating multiple stages.
+
 ## Paths and runtime
 
 - Locate this `SKILL.md` on disk. The HARBOR plugin root is two directories

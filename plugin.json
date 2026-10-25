@@ -3,6 +3,7 @@
   "name": "harbor",
   "version": "0.2.0",
   "description": "Build and test robot RL tasks, train policies, and tune rewards and algorithms with HARBOR.",
+  "skills": "./skills/",
   "author": {
     "name": "Steven Li",
     "url": "https://github.com/supersglzc"
