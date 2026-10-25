@@ -59,8 +59,9 @@ sentinel_seen() {
 # Own process group, so teardown reaches the simulator's children too.
 setsid bash -c "$CMD" >"$LOG" 2>&1 &
 CHILD=$!
-PGID=$(ps -o pgid= "$CHILD" 2>/dev/null | tr -d ' ')
-[ -n "$PGID" ] || PGID="$CHILD"
+# setsid makes the child the group leader. Querying ps here can race with
+# setsid and return the caller's group, which stop_group would then kill.
+PGID="$CHILD"
 
 stop_group() {
     kill -TERM "-$PGID" 2>/dev/null
