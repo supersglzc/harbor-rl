@@ -7,6 +7,7 @@ The three behaviors every caller depends on, and the reason each exists:
   - a job that dies without ever producing a sentinel is a failure, even if it exits 0;
   - a sentinel that lands in the same tick the process exits still counts.
 """
+import os
 import subprocess
 import sys
 import time
@@ -42,6 +43,36 @@ def test_sentinel_then_hang_is_success_and_the_process_is_reaped(tmp_path):
     marker.unlink(missing_ok=True)
     time.sleep(3)
     assert not marker.exists(), "the hung process group survived teardown"
+
+
+def test_teardown_never_signals_the_callers_process_group(tmp_path):
+    # Simulate ps observing the old parent group before setsid takes effect.
+    # Isolate the launcher so the broken implementation cannot kill pytest.
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    fake_ps = fake_bin / "ps"
+    fake_ps.write_text('#!/bin/sh\nprintf "%s\\n" "$TEST_CALLER_PGID"\n')
+    fake_ps.chmod(0o755)
+
+    sentinel = tmp_path / "done"
+    env = os.environ.copy()
+    env["PATH"] = f"{fake_bin}:{env['PATH']}"
+    env["HARBOR_SENTINEL_SCRIPT"] = str(SCRIPT)
+    env["HARBOR_SENTINEL_FILE"] = str(sentinel)
+    launcher = """
+TEST_CALLER_PGID=$(/usr/bin/ps -o pgid= -p $$ | tr -d ' ')
+export TEST_CALLER_PGID
+exec bash "$HARBOR_SENTINEL_SCRIPT" \\
+  --cmd 'touch "$HARBOR_SENTINEL_FILE"; sleep 10' \\
+  --sentinel-file "$HARBOR_SENTINEL_FILE" \\
+  --poll 1 --grace 0 --kill-after 1
+"""
+    r = subprocess.run(
+        ["bash", "-c", launcher], start_new_session=True,
+        capture_output=True, text=True, env=env, timeout=20,
+    )
+    assert r.returncode == 0, r.stderr
+    assert sentinel.exists()
 
 
 def test_exit_without_sentinel_is_failure(tmp_path):

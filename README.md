@@ -120,7 +120,7 @@ The same task descriptions, given to HARBOR against different simulator codebase
 
 ### 1. Install
 
-HARBOR is a [Claude Code](https://claude.com/claude-code) plugin and needs Claude Code **≥ 2.1.219**. Inside Claude Code:
+For [Claude Code](https://claude.com/claude-code), HARBOR needs Claude Code **≥ 2.1.219**. Inside Claude Code:
 
 ```text
 /plugin marketplace add supersglzc/harbor-rl
@@ -130,6 +130,14 @@ HARBOR is a [Claude Code](https://claude.com/claude-code) plugin and needs Claud
 `/harbor:help` lists the full surface.
 
 That is the whole install. HARBOR installs [`uv`](https://docs.astral.sh/uv/) on first use if the host lacks it, and every Python dependency goes into the target repository's own `.venv/` — your system Python is never touched. See the [installation guide](https://supersglzc.github.io/harbor-rl/guide/install) for GPU driver requirements and troubleshooting.
+
+**Using Codex?** HARBOR also ships a Codex plugin with a `$harbor` skill and
+individual `$harbor-task-create`, `$harbor-reward-tune`, `$harbor-rl-run`,
+`$harbor-rl-eval`, and other command skills.
+Run `codex plugin marketplace add supersglzc/harbor-rl`, then
+`codex plugin add harbor@harbor-codex`. The skills use HARBOR's existing
+scripts and gates without invoking Claude-specific commands. See the
+[Codex installation and workflow guide](docs/guide/codex.md).
 
 ### 2. Ask HARBOR to build a task
 
